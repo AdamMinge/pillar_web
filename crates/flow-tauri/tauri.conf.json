@@ -14,7 +14,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.github.jetli.realworld.yew",
+      "identifier": "com.tauri.flow",
       "icon": [
         "icons/256x256.png"
       ],
@@ -49,7 +49,7 @@
     },
     "windows": [
       {
-        "title": "Rust Yew RealWorld Example App",
+        "title": "Flow App",
         "width": 800,
         "height": 600,
         "resizable": true,
