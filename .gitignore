@@ -12,7 +12,7 @@ Cargo.lock
 # Other
 .idea/
 .vscode/
-node_modules/
+node_modules
 build
 dist
 pkg
