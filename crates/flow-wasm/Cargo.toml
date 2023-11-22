@@ -1,7 +1,11 @@
 [package]
 authors = ["Adam Minge <minge.adam@gmail.com>"]
 categories = ["wasm"]
-description = "."
+description = """
+Flow is a application that empowers you to create complex node-based workflows effortlessly. 
+With a focus on extensibility, Flow is designed to be the platform for managing and customizing your documents through an array of powerful plugins.
+It's a versatile tool that combines documentation management with node-based programming, opening up a world of possibilities for users across various domains.
+"""
 edition = "2021"
 license = "Apache-2.0/MIT"
 name = "flow-wasm"
@@ -12,6 +16,7 @@ version = "0.1.0"
 chrono = { version = "0.4", features = ["serde"] }
 dotenv_codegen = "0.15.0"
 gloo = "0.10"
+gloo-utils = "0.2"
 lazy_static = "1.4.0"
 log = "0.4"
 patternfly-yew = { version = "0.5.2", features = ["tree", "dual_list_selector", "icons-fab", "search_input"] }
@@ -23,6 +28,8 @@ thiserror = "1"
 yew = { version = "0.21.0", features = ["csr"] }
 yew-router = "0.18.0"
 yew-hooks = "0.3.0"
+yew-more-hooks = { version = "0.3.0", features = ["yew-hooks"] }
+yew-nested-router = "0.4"
 wasm-bindgen = "0.2"
 wasm-logger = "0.2"
 
