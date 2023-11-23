@@ -1,0 +1,17 @@
+[build]
+target = "./index.html"
+dist = "./dist"
+
+[watch]
+watch = []
+ignore = []
+
+[serve]
+address = "127.0.0.1"
+port = 8000
+open = false
+no_autoreload = false
+
+[clean]
+dist = "dist"
+cargo = false

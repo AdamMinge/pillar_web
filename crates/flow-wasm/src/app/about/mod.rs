@@ -6,8 +6,8 @@ pub fn about() -> Html {
     html!(
         <Bullseye>
             <AboutModal
-            background_image_src="/assets/images/pfbg-icon.svg"
-            brand_image_src="/assets/images/PF-Masthead-Logo.svg"
+            background_image_src="/public/images/background.png"
+            brand_image_src="/public/images/logo.png"
             brand_image_alt="Flow logo"
             product_name="Flow"
             trademark="Copyright © 2020, 2023 Flow"

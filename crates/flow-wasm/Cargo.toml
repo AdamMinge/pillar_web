@@ -1,6 +1,5 @@
 [package]
 authors = ["Adam Minge <minge.adam@gmail.com>"]
-categories = ["wasm"]
 description = """
 Flow is a application that empowers you to create complex node-based workflows effortlessly. 
 With a focus on extensibility, Flow is designed to be the platform for managing and customizing your documents through an array of powerful plugins.
@@ -9,7 +8,6 @@ It's a versatile tool that combines documentation management with node-based pro
 edition = "2021"
 license = "Apache-2.0/MIT"
 name = "flow-wasm"
-repository = "https://github.com/AdamMinge/egnite_web"
 version = "0.1.0"
 
 [dependencies]

@@ -1,12 +1,8 @@
 [package]
+authors = ["Adam Minge <minge.adam@gmail.com>"]
+edition = "2021"
 name = "flow-tauri"
 version = "0.1.0"
-description = "Flow App"
-authors = ["Adam Minge"]
-license = ""
-repository = ""
-default-run = "flow-tauri"
-edition = "2021"
 
 [build-dependencies]
 tauri-build = { version = "1.4", features = [] }

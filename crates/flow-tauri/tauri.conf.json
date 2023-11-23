@@ -5,7 +5,7 @@
   },
   "build": {
     "distDir": "../flow-wasm/dist",
-    "devPath": "http://localhost:8080",
+    "devPath": "http://localhost:8000",
     "beforeDevCommand": "cd flow-wasm && trunk serve",
     "beforeBuildCommand": "cd flow-wasm && trunk build",
     "withGlobalTauri": true
@@ -16,6 +16,9 @@
       "targets": "all",
       "identifier": "com.tauri.flow",
       "icon": [
+        "icons/32x32.png",
+        "icons/64x64.png",
+        "icons/128x128.png",
         "icons/256x256.png"
       ],
       "resources": [],
