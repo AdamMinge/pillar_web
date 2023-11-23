@@ -10,7 +10,7 @@ pub fn about() -> Html {
             brand_image_src="/public/images/logo.png"
             brand_image_alt="Flow logo"
             product_name="Flow"
-            trademark="Copyright © 2020, 2023 Flow"
+            trademark="Copyright © 2023 Flow"
             >
 
             <p>{ env!("CARGO_PKG_DESCRIPTION") }</p>
