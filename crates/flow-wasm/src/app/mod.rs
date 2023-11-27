@@ -1,24 +1,36 @@
-pub mod about;
-pub mod home;
+pub mod index;
+pub mod user;
 
 use patternfly_yew::prelude::*;
 use yew::prelude::*;
 use yew_nested_router::prelude::{Switch as RouterSwitch, *};
 use yew_nested_router::Target;
 
+use crate::components;
+
+#[derive(Debug, Default, Clone, PartialEq, Eq, Target)]
+pub enum UserRoute {
+    #[default]
+    Login,
+    Register,
+}
+
 #[derive(Debug, Default, Clone, PartialEq, Eq, Target)]
 pub enum AppRoute {
     #[default]
-    Home,
+    Index,
+    User(UserRoute),
 }
 
-#[function_component(Application)]
+#[function_component(App)]
 pub fn app() -> Html {
     html! {
         <BackdropViewer>
             <ToastViewer>
-                <Router<AppRoute> default={AppRoute::Home}>
-                    <RouterSwitch<AppRoute> render={switch_app_route} />
+                <Router<AppRoute> default={AppRoute::Index}>
+                    <components::UserContextProvider>
+                        <RouterSwitch<AppRoute> render={switch_app_route} />
+                    </components::UserContextProvider>
                 </Router<AppRoute>>
             </ToastViewer>
         </BackdropViewer>
@@ -26,72 +38,22 @@ pub fn app() -> Html {
 }
 
 fn switch_app_route(target: AppRoute) -> Html {
-    match target {
-        AppRoute::Home => html! {<AppPage><home::Home/></AppPage>},
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Properties)]
-pub struct PageProps {
-    pub children: Children,
-}
-
-#[function_component(AppPage)]
-fn page(props: &PageProps) -> Html {
-    let sidebar = html_nested! {
-        <PageSidebar>
-            <Nav>
-                <NavList>
-                </NavList>
-            </Nav>
-        </PageSidebar>
+    let user = |target: UserRoute| match target {
+        UserRoute::Login => html! {<user::Login/>},
+        UserRoute::Register => html! {<user::Register/>},
     };
 
-    let brand = html! (
-        <MastheadBrand>
-            <Brand src="/public/images/brand.png" alt="Flow brand" />
-        </MastheadBrand>
-    );
+    match target {
+        AppRoute::Index => html! {<components::AppPage><index::Index/></components::AppPage>},
 
-    let backdropper = use_backdrop();
-    let onabout = use_callback((), move |_, ()| {
-        if let Some(backdropper) = &backdropper {
-            backdropper.open(html!(<about::About/>));
+        AppRoute::User(_) => {
+            html!(
+                <components::AppPage>
+                    <Scope<AppRoute, UserRoute> mapper={AppRoute::mapper_user}>
+                        <RouterSwitch<UserRoute> render={user}/>
+                    </Scope<AppRoute, UserRoute>>
+                </components::AppPage>
+            )
         }
-    });
-
-    let onthemeswitch = use_callback((), |state, ()| match state {
-        true => gloo_utils::document_element().set_class_name("pf-v5-theme-dark"),
-        false => gloo_utils::document_element().set_class_name(""),
-    });
-
-    let tools = html!(
-        <Toolbar full_height=true>
-            <ToolbarContent>
-                <ToolbarGroup
-                    modifiers={ToolbarElementModifier::Right.all()}
-                    variant={GroupVariant::IconButton}
-                >
-                    <ToolbarItem>
-                        <patternfly_yew::prelude::Switch onchange={onthemeswitch} label="Dark Theme" />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <Dropdown
-                            position={Position::Right}
-                            icon={Icon::QuestionCircle}
-                            variant={MenuToggleVariant::Plain}
-                        >
-                            <MenuAction onclick={onabout}>{"About"}</MenuAction>
-                        </Dropdown>
-                    </ToolbarItem>
-                </ToolbarGroup>
-            </ToolbarContent>
-        </Toolbar>
-    );
-
-    html! (
-        <Page {brand} {sidebar} {tools}>
-            { for props.children.iter() }
-        </Page>
-    )
+    }
 }

@@ -1,16 +1,16 @@
 use patternfly_yew::prelude::*;
 use yew::prelude::*;
 
-#[function_component(About)]
-pub fn about() -> Html {
+#[function_component(AboutBullseye)]
+pub fn about_bullseye() -> Html {
     html!(
         <Bullseye>
             <AboutModal
-            background_image_src="/public/images/background.png"
-            brand_image_src="/public/images/logo.png"
-            brand_image_alt="Flow logo"
-            product_name="Flow"
-            trademark="Copyright © 2023 Flow"
+                background_image_src="/public/images/background.png"
+                brand_image_src="/public/images/logo.png"
+                brand_image_alt="Flow logo"
+                product_name="Flow"
+                trademark="Copyright © 2023 Flow"
             >
 
             <p>{ env!("CARGO_PKG_DESCRIPTION") }</p>

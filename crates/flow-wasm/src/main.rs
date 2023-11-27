@@ -1,6 +1,6 @@
-use flow_wasm::app::Application;
+use flow_wasm::app::App;
 
 pub fn main() {
     wasm_logger::init(wasm_logger::Config::default());
-    yew::Renderer::<Application>::new().render();
+    yew::Renderer::<App>::new().render();
 }
