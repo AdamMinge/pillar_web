@@ -5,30 +5,36 @@ use yew_nested_router::components::*;
 use yew_nested_router::prelude::*;
 
 #[derive(Clone, PartialEq, Properties)]
-pub struct LoginPageProps<T: Target> {
-    pub signup: T,
-    pub recovery: T,
+pub struct SignupPageProps<T: Target> {
+    pub login: T,
 }
 
-#[function_component(LoginPage)]
-pub fn login_page<T: Target>(props: &LoginPageProps<T>) -> Html {
+#[function_component(SignupPage)]
+pub fn signup_page<T: Target>(props: &SignupPageProps<T>) -> Html {
     let links = ChildrenRenderer::new(vec![]);
 
     let band = ChildrenRenderer::new(vec![
-        html! {<>{"Need an account? "}<Link<T> active="active" target={props.signup.clone()}>{ "Sign up" }</Link<T>></>},
-        html! {<Link<T> active="active" target={props.recovery.clone()}>{ "Forgot password?" }</Link<T>>},
+        html! {<>{"Already have an account? "}<Link<T> active="active" target={props.login.clone()}>{ "Log in" }</Link<T>></>},
     ]);
 
-    let title = html_nested! {<Title size={Size::XXLarge}>{"Login to your account"}</Title>};
+    let title = html_nested! {<Title size={Size::XXLarge}>{"Create your account"}</Title>};
     let toaster = use_toaster();
 
     let username = use_state_eq(String::new);
+    let email = use_state_eq(String::new);
     let password = use_state_eq(String::new);
 
     let onchangeusername = {
         let username = username.clone();
         Callback::from(move |value| {
             username.set(value);
+        })
+    };
+
+    let onchangeemail = {
+        let email = email.clone();
+        Callback::from(move |value| {
+            email.set(value);
         })
     };
 
@@ -42,12 +48,13 @@ pub fn login_page<T: Target>(props: &LoginPageProps<T>) -> Html {
     let onsubmit = {
         let toaster = toaster.clone();
         let username = username.clone();
+        let email: UseStateHandle<String> = email.clone();
         let password = password.clone();
         Callback::from(move |_| {
             if let Some(toaster) = &toaster {
                 toaster.toast(format!(
-                    "Log in - Username: {}, Password: {}",
-                    &*username, &*password
+                    "Sign up - Username: {}, Email: {}, Password: {}",
+                    &*username, &*email, &*password
                 ));
             }
         })
@@ -68,11 +75,14 @@ pub fn login_page<T: Target>(props: &LoginPageProps<T>) -> Html {
                                 <FormGroup label="Username">
                                     <TextInput required=true name="username" onchange={onchangeusername} value={(*username).clone()} />
                                 </FormGroup>
+                                <FormGroup label="Email">
+                                    <TextInput required=true name="email" onchange={onchangeemail} value={(*email).clone()} />
+                                </FormGroup>
                                 <FormGroup label="Password">
                                     <TextInput required=true name="password" r#type={TextInputType::Password} onchange={onchangepassword} value={(*password).clone()} />
                                 </FormGroup>
                                 <ActionGroup>
-                                    <Button label="Log In" block=true r#type={ButtonType::Submit} variant={ButtonVariant::Primary}/>
+                                    <Button label="Sign up" block=true r#type={ButtonType::Submit} variant={ButtonVariant::Primary}/>
                                 </ActionGroup>
                             </Form>
                         </LoginMainBody>

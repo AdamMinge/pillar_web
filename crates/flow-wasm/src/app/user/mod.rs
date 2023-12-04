@@ -1,5 +1,7 @@
 pub mod login;
-pub mod register;
+pub mod password_recovery;
+pub mod signup;
 
 pub use login::*;
-pub use register::*;
+pub use password_recovery::*;
+pub use signup::*;

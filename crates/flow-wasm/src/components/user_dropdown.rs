@@ -10,7 +10,7 @@ pub fn user_dropdown() -> Html {
     let user_ctx = use_user_context();
 
     let login_callback = use_router(AppRoute::User(UserRoute::Login));
-    let register_callback = use_router(AppRoute::User(UserRoute::Register));
+    let register_callback = use_router(AppRoute::User(UserRoute::Signup));
 
     let dropdown_content = if user_ctx.is_authenticated() {
         vec![]

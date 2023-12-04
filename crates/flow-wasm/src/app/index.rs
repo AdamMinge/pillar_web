@@ -1,6 +1,6 @@
 use yew::prelude::*;
 
-#[function_component(Index)]
-pub fn index() -> Html {
+#[function_component(IndexPage)]
+pub fn index_page() -> Html {
     html! {}
 }

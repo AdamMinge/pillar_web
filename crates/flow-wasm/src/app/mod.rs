@@ -12,7 +12,9 @@ use crate::components;
 pub enum UserRoute {
     #[default]
     Login,
-    Register,
+    Signup,
+    #[target(rename = "recovery")]
+    PasswordRecovery,
 }
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, Target)]
@@ -39,20 +41,33 @@ pub fn app() -> Html {
 
 fn switch_app_route(target: AppRoute) -> Html {
     let user = |target: UserRoute| match target {
-        UserRoute::Login => html! {<user::Login/>},
-        UserRoute::Register => html! {<user::Register/>},
+        UserRoute::Login => {
+            html! {
+            <user::LoginPage<UserRoute>
+                signup={UserRoute::Signup}
+                recovery={UserRoute::PasswordRecovery}
+            />}
+        }
+        UserRoute::Signup => html! {
+            <user::SignupPage<UserRoute>
+                login={UserRoute::Login}
+            />
+        },
+        UserRoute::PasswordRecovery => html! {<user::PasswordRecoveryPage/>},
     };
 
     match target {
-        AppRoute::Index => html! {<components::AppPage><index::Index/></components::AppPage>},
+        AppRoute::Index => html! {
+            <components::AppPage>
+                <index::IndexPage/>
+            </components::AppPage>
+        },
 
         AppRoute::User(_) => {
             html!(
-                <components::AppPage>
-                    <Scope<AppRoute, UserRoute> mapper={AppRoute::mapper_user}>
-                        <RouterSwitch<UserRoute> render={user}/>
-                    </Scope<AppRoute, UserRoute>>
-                </components::AppPage>
+                <Scope<AppRoute, UserRoute> mapper={AppRoute::mapper_user}>
+                    <RouterSwitch<UserRoute> render={user}/>
+                </Scope<AppRoute, UserRoute>>
             )
         }
     }

@@ -6,12 +6,12 @@ use crate::services::{auth::*, get_token, set_token};
 use crate::types::UserInfo;
 
 #[derive(Properties, Clone, PartialEq)]
-pub struct Props {
+pub struct UserContextProviderProps {
     pub children: Children,
 }
 
 #[function_component(UserContextProvider)]
-pub fn user_context_provider(props: &Props) -> Html {
+pub fn user_context_provider(props: &UserContextProviderProps) -> Html {
     let user_ctx = use_state(UserInfo::default);
     let current_user = use_async(async move { current().await });
 
