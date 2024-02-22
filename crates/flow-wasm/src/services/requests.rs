@@ -1,13 +1,15 @@
+use dotenv_codegen::dotenv;
 use gloo::storage::{LocalStorage, Storage};
 use lazy_static::lazy_static;
 use parking_lot::RwLock;
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::error::Error;
-use crate::types::ErrorInfo;
+use crate::types::ErrorResponse;
 
-const API_ROOT: &str = "https://";
-const TOKEN_KEY: &str = "yew.token";
+const API_ROOT: &str = dotenv!("API_ROOT");
+const API_KEY: &str = dotenv!("API_KEY");
+const TOKEN_KEY: &str = "auth.token";
 
 lazy_static! {
     pub static ref TOKEN: RwLock<Option<String>> = {
@@ -21,7 +23,7 @@ lazy_static! {
 
 pub fn set_token(token: Option<String>) {
     if let Some(t) = token.clone() {
-        LocalStorage::set(TOKEN_KEY, t).expect("failed to set");
+        LocalStorage::set(TOKEN_KEY, t).expect("failed to set token");
     } else {
         LocalStorage::delete(TOKEN_KEY);
     }
@@ -43,7 +45,9 @@ where
     let url = format!("{}{}", API_ROOT, url);
     let mut builder = reqwest::Client::new()
         .request(method, url)
-        .header("Content-Type", "application/json");
+        .header(reqwest::header::CONTENT_TYPE, "application/json")
+        .header(reqwest::header::AUTHORIZATION, API_KEY);
+
     if let Some(token) = get_token() {
         builder = builder.bearer_auth(token);
     }
@@ -70,7 +74,7 @@ where
                 404 => Err(Error::NotFound),
                 500 => Err(Error::InternalServerError),
                 422 => {
-                    let data: Result<ErrorInfo, _> = data.json::<ErrorInfo>().await;
+                    let data: Result<ErrorResponse, _> = data.json::<ErrorResponse>().await;
                     if let Ok(data) = data {
                         Err(Error::UnprocessableEntity(data))
                     } else {

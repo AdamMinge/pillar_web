@@ -30,9 +30,7 @@ pub fn app() -> Html {
         <BackdropViewer>
             <ToastViewer>
                 <Router<AppRoute> default={AppRoute::Index}>
-                    <components::UserContextProvider>
-                        <RouterSwitch<AppRoute> render={switch_app_route} />
-                    </components::UserContextProvider>
+                    <RouterSwitch<AppRoute> render={switch_app_route} />
                 </Router<AppRoute>>
             </ToastViewer>
         </BackdropViewer>

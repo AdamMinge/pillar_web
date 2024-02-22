@@ -1,4 +1,5 @@
-use crate::types::ErrorInfo;
+use crate::types::ErrorResponse;
+
 use thiserror::Error as ThisError;
 
 #[derive(ThisError, Clone, Debug, PartialEq, Eq)]
@@ -17,7 +18,7 @@ pub enum Error {
 
     /// 422
     #[error("Unprocessable Entity: {0:?}")]
-    UnprocessableEntity(ErrorInfo),
+    UnprocessableEntity(ErrorResponse),
 
     /// 500
     #[error("Internal Server Error")]

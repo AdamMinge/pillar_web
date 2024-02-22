@@ -1,6 +1,5 @@
-pub mod auth;
 pub mod requests;
+pub mod user;
 
-pub use requests::{
-    get_token, limit, request_delete, request_get, request_post, request_put, set_token,
-};
+pub use requests::*;
+pub use user::*;

@@ -1,8 +1,5 @@
 [workspace]
-members = [
-    "crates/flow-wasm", 
-    "crates/flow-tauri"
-]
+members = ["crates/flow-auth", "crates/flow-wasm", "crates/flow-tauri"]
 resolver = "2"
 
 [profile.release]

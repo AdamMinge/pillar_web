@@ -1,17 +1,12 @@
-mod auth;
+mod user;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-pub use auth::{
-    LoginInfo, LoginInfoWrapper, RegisterInfo, RegisterInfoWrapper, UserInfo, UserInfoWrapper,
-    UserUpdateInfo, UserUpdateInfoWrapper,
-};
+pub use user::*;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
-pub struct ErrorInfo {
+pub struct ErrorResponse {
     pub errors: HashMap<String, Vec<String>>,
 }
-
-pub type DeleteWrapper = HashMap<(), ()>;
