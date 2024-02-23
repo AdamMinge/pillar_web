@@ -1,6 +1,8 @@
+mod auth;
 mod authenticated;
 mod no_authenticated;
 
+pub use auth::*;
 pub use authenticated::*;
 pub use no_authenticated::*;
 

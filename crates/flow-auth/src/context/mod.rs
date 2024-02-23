@@ -1,5 +1,8 @@
+mod agent;
+
+pub use agent::*;
+
 #[derive(Clone, Debug, Default, PartialEq)]
-#[cfg_attr(not(feature = "openid"), derive(Eq))]
 pub struct Authentication {
     pub access_token: String,
     pub refresh_token: Option<String>,
@@ -14,7 +17,6 @@ pub enum Reason {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(not(feature = "openid"), derive(Eq))]
 pub enum AuthContext {
     NotInitialized,
     NotAuthenticated { reason: Reason },
