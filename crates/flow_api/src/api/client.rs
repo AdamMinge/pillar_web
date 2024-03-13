@@ -139,9 +139,9 @@ impl InnerClient {
         Ok(())
     }
 
-    async fn login(&mut self, username: &str, password: &str) -> Result<(), Error> {
+    async fn login(&mut self, email: &str, password: &str) -> Result<(), Error> {
         let body = LoginRequest {
-            username: username.to_string(),
+            email: email.to_string(),
             password: password.to_string(),
         };
 
@@ -202,8 +202,6 @@ impl InnerClient {
     }
 
     fn update_context(&mut self, context: AuthContext) -> Result<(), Error> {
-        log::debug!("update_context {context:?}");
-
         state::set_into_store(state::STORAGE_KEY_AUTH, context.clone())?;
 
         self.callback.emit(context.clone());
@@ -217,8 +215,6 @@ impl InnerClient {
         T: DeserializeOwned + 'static + std::fmt::Debug,
         B: Serialize + std::fmt::Debug,
     {
-        log::debug!("request {method:?} {route:?} {body:?}");
-
         let request = self.make_request::<B, T>(method, route, body).await?;
         self.send_request::<T>(request).await
     }
@@ -235,6 +231,13 @@ impl InnerClient {
     {
         let allow_body = method == reqwest::Method::POST || method == reqwest::Method::PUT;
 
+        let root = self
+            .config
+            .as_ref()
+            .ok_or(Error::NotInitialized)?
+            .api_root
+            .clone();
+
         let url = self
             .config
             .as_ref()
@@ -250,6 +253,9 @@ impl InnerClient {
             .ok_or(Error::NotInitialized)?
             .api_token
             .clone();
+
+        log::debug!("root {root:?}");
+        log::debug!("url {url:?}");
 
         let mut builder = reqwest::Client::new()
             .request(method, url)

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct LoginRequest {
-    pub username: String,
+    pub email: String,
     pub password: String,
 }
 
