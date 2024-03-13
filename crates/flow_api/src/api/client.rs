@@ -254,9 +254,6 @@ impl InnerClient {
             .api_token
             .clone();
 
-        log::debug!("root {root:?}");
-        log::debug!("url {url:?}");
-
         let mut builder = reqwest::Client::new()
             .request(method, url)
             .header(reqwest::header::CONTENT_TYPE, "application/json");
