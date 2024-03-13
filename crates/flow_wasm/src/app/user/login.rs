@@ -22,13 +22,13 @@ pub fn login_page<T: Target>(props: &LoginPageProps<T>) -> Html {
 
     let title = html_nested! {<Title size={Size::XXLarge}>{"Login to your account"}</Title>};
 
-    let username = use_state_eq(String::new);
+    let email = use_state_eq(String::new);
     let password = use_state_eq(String::new);
 
     let onchangeusername = {
-        let username = username.clone();
+        let email = email.clone();
         Callback::from(move |value| {
-            username.set(value);
+            email.set(value);
         })
     };
 
@@ -41,9 +41,9 @@ pub fn login_page<T: Target>(props: &LoginPageProps<T>) -> Html {
 
     let user_login = {
         let client = flow_api::hooks::use_client();
-        let username = username.clone();
+        let email = email.clone();
         let password = password.clone();
-        use_async(async move { client.unwrap().login(&username, &password).await })
+        use_async(async move { client.unwrap().login(&email, &password).await })
     };
 
     let onsubmit = {
@@ -66,8 +66,8 @@ pub fn login_page<T: Target>(props: &LoginPageProps<T>) -> Html {
                         />
                         <LoginMainBody>
                             <Form {onsubmit} method="dialog">
-                                <FormGroup label="Username">
-                                    <TextInput required=true name="username" onchange={onchangeusername} value={(*username).clone()} />
+                                <FormGroup label="Email">
+                                    <TextInput required=true name="email" onchange={onchangeusername} value={(*email).clone()} />
                                 </FormGroup>
                                 <FormGroup label="Password">
                                     <TextInput required=true name="password" r#type={TextInputType::Password} onchange={onchangepassword} value={(*password).clone()} />
