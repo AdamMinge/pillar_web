@@ -1,12 +1,8 @@
 use super::{state, Config, Error};
-use crate::context::{AuthContext, Authentication, Reason};
-use crate::types::{ErrorResponse, LoginRequest, LoginResponse, RefreshRequest, RefreshResponse};
+use crate::{context, types};
 use reqwest::{header::HeaderName, RequestBuilder};
 use serde::{de::DeserializeOwned, Serialize};
 use yew::Callback;
-
-const LOGIN_ROUTE: &str = "auth/login/";
-const REFRESH_ROUTE: &str = "auth/login/refresh";
 
 #[derive(Clone, Debug)]
 pub struct Client {
@@ -16,7 +12,7 @@ pub struct Client {
 impl Client {
     pub fn new<F>(auth_callback: F) -> Self
     where
-        F: Fn(AuthContext) + 'static,
+        F: Fn(context::AuthContext) + 'static,
     {
         Self {
             inner: InnerClient::new(auth_callback),
@@ -39,21 +35,21 @@ impl Client {
         self.inner.refresh().await
     }
 
-    async fn delete<T>(&mut self, route: &str) -> Result<T, Error>
+    pub(crate) async fn delete<T>(&mut self, route: &str) -> Result<T, Error>
     where
         T: DeserializeOwned + 'static + std::fmt::Debug,
     {
         self.request(reqwest::Method::DELETE, route, ()).await
     }
 
-    async fn get<T>(&mut self, route: &str) -> Result<T, Error>
+    pub(crate) async fn get<T>(&mut self, route: &str) -> Result<T, Error>
     where
         T: DeserializeOwned + 'static + std::fmt::Debug,
     {
         self.request(reqwest::Method::GET, route, ()).await
     }
 
-    async fn post<B, T>(&mut self, route: &str, body: B) -> Result<T, Error>
+    pub(crate) async fn post<B, T>(&mut self, route: &str, body: B) -> Result<T, Error>
     where
         T: DeserializeOwned + 'static + std::fmt::Debug,
         B: Serialize + Clone + std::fmt::Debug,
@@ -61,7 +57,7 @@ impl Client {
         self.request(reqwest::Method::POST, route, body).await
     }
 
-    async fn put<B, T>(&mut self, route: &str, body: B) -> Result<T, Error>
+    pub(crate) async fn put<B, T>(&mut self, route: &str, body: B) -> Result<T, Error>
     where
         T: DeserializeOwned + 'static + std::fmt::Debug,
         B: Serialize + Clone + std::fmt::Debug,
@@ -99,26 +95,26 @@ impl Client {
 #[derive(Clone, Debug)]
 struct InnerClient {
     config: Option<Config>,
-    callback: Callback<AuthContext>,
-    context: AuthContext,
+    callback: Callback<context::AuthContext>,
+    context: context::AuthContext,
 }
 
 impl InnerClient {
     fn new<F>(auth_callback: F) -> Self
     where
-        F: Fn(AuthContext) + 'static,
+        F: Fn(context::AuthContext) + 'static,
     {
         Self {
             config: None,
             callback: Callback::from(auth_callback),
-            context: AuthContext::NotInitialized,
+            context: context::AuthContext::NotInitialized,
         }
     }
 
     fn configure(&mut self, config: Config) -> Result<(), Error> {
         self.config = Some(config);
 
-        if matches!(self.context, AuthContext::NotInitialized) {
+        if matches!(self.context, context::AuthContext::NotInitialized) {
             self.restore_state()?
         }
 
@@ -126,13 +122,13 @@ impl InnerClient {
     }
 
     fn restore_state(&mut self) -> Result<(), Error> {
-        let context = state::get_from_store::<AuthContext, _>(state::STORAGE_KEY_AUTH)?;
+        let context = state::get_from_store::<context::AuthContext, _>(state::STORAGE_KEY_AUTH)?;
 
-        if let Some(AuthContext::Authenticated(auth)) = context {
-            self.update_context(AuthContext::Authenticated(auth))?;
+        if let Some(context::AuthContext::Authenticated(auth)) = context {
+            self.update_context(context::AuthContext::Authenticated(auth))?;
         } else {
-            self.update_context(AuthContext::NotAuthenticated {
-                reason: Reason::NewSession,
+            self.update_context(context::AuthContext::NotAuthenticated {
+                reason: context::Reason::NewSession,
             })?;
         }
 
@@ -140,26 +136,28 @@ impl InnerClient {
     }
 
     async fn login(&mut self, email: &str, password: &str) -> Result<(), Error> {
-        let body = LoginRequest {
+        let body = types::Login {
             email: email.to_string(),
             password: password.to_string(),
         };
 
         let response = self
-            .request::<LoginRequest, LoginResponse>(reqwest::Method::POST, LOGIN_ROUTE, body)
+            .request::<types::Login, types::Tokens>(reqwest::Method::POST, "auth/login/", body)
             .await?;
 
-        self.update_context(AuthContext::Authenticated(Authentication {
-            access_token: response.access,
-            refresh_token: response.refresh,
-        }))?;
+        self.update_context(context::AuthContext::Authenticated(
+            context::Authentication {
+                access_token: response.access,
+                refresh_token: response.refresh,
+            },
+        ))?;
 
         Ok(())
     }
 
     async fn logout(&mut self) -> Result<(), Error> {
-        self.update_context(AuthContext::NotAuthenticated {
-            reason: Reason::Logout,
+        self.update_context(context::AuthContext::NotAuthenticated {
+            reason: context::Reason::Logout,
         })?;
 
         Ok(())
@@ -167,30 +165,32 @@ impl InnerClient {
 
     async fn refresh(&mut self) -> Result<(), Error> {
         if let Some(refresh_token) = self.context.access_token() {
-            let body = RefreshRequest {
+            let body = types::RefreshToken {
                 refresh: String::from(refresh_token),
             };
 
             let response = self
-                .request::<RefreshRequest, RefreshResponse>(
+                .request::<types::RefreshToken, types::AccessToken>(
                     reqwest::Method::POST,
-                    REFRESH_ROUTE,
+                    "auth/login/refresh",
                     body,
                 )
                 .await;
 
             match response {
                 Ok(response) => {
-                    self.update_context(AuthContext::Authenticated(Authentication {
-                        access_token: response.access,
-                        refresh_token: String::from(refresh_token),
-                    }))?;
+                    self.update_context(context::AuthContext::Authenticated(
+                        context::Authentication {
+                            access_token: response.access,
+                            refresh_token: String::from(refresh_token),
+                        },
+                    ))?;
 
                     Ok(())
                 }
                 Err(_) => {
-                    self.update_context(AuthContext::NotAuthenticated {
-                        reason: Reason::Expired,
+                    self.update_context(context::AuthContext::NotAuthenticated {
+                        reason: context::Reason::Expired,
                     })?;
 
                     Err(Error::Unauthorized)
@@ -201,7 +201,7 @@ impl InnerClient {
         }
     }
 
-    fn update_context(&mut self, context: AuthContext) -> Result<(), Error> {
+    fn update_context(&mut self, context: context::AuthContext) -> Result<(), Error> {
         state::set_into_store(state::STORAGE_KEY_AUTH, context.clone())?;
 
         self.callback.emit(context.clone());
@@ -230,13 +230,6 @@ impl InnerClient {
         B: Serialize + std::fmt::Debug,
     {
         let allow_body = method == reqwest::Method::POST || method == reqwest::Method::PUT;
-
-        let root = self
-            .config
-            .as_ref()
-            .ok_or(Error::NotInitialized)?
-            .api_root
-            .clone();
 
         let url = self
             .config
@@ -294,7 +287,7 @@ impl InnerClient {
                     404 => Err(Error::NotFound),
                     500 => Err(Error::InternalServerError),
                     422 => {
-                        let data = data.json::<ErrorResponse>().await;
+                        let data = data.json::<types::ErrorResponse>().await;
                         if let Ok(data) = data {
                             Err(Error::UnprocessableEntity(data))
                         } else {
