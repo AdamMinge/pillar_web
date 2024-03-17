@@ -1,10 +1,11 @@
+use super::{AppAbout, AppAccount};
+use crate::components::ThemeSwitch;
+
 use patternfly_yew::prelude::*;
 use yew::prelude::*;
 
-use crate::components;
-
-#[function_component(ToolsToolbar)]
-pub fn tools_toolbar() -> Html {
+#[function_component(AppToolbar)]
+pub fn app_toolbar() -> Html {
     html! {
         <Toolbar full_height=true>
             <ToolbarContent>
@@ -13,13 +14,13 @@ pub fn tools_toolbar() -> Html {
                     variant={GroupVariant::IconButton}
                 >
                     <ToolbarItem>
-                        <components::ThemeSwitch/>
+                        <ThemeSwitch/>
                     </ToolbarItem>
                     <ToolbarItem>
-                        <components::AboutDropdown/>
+                        <AppAbout/>
                     </ToolbarItem>
                     <ToolbarItem>
-                        <components::UserDropdown/>
+                        <AppAccount/>
                     </ToolbarItem>
                 </ToolbarGroup>
             </ToolbarContent>

@@ -1,7 +1,7 @@
+use super::{AppNavigation, AppToolbar};
+
 use patternfly_yew::prelude::*;
 use yew::prelude::*;
-
-use crate::components;
 
 #[derive(Clone, Debug, PartialEq, Properties)]
 pub struct AppPageProps {
@@ -17,11 +17,11 @@ pub fn app_page(props: &AppPageProps) -> Html {
     };
     let sidebar = html_nested! {
         <PageSidebar>
-            <components::Navigation/>
+            <AppNavigation/>
         </PageSidebar>
     };
     let tools = html! {
-        <components::ToolsToolbar />
+        <AppToolbar />
     };
 
     html! (

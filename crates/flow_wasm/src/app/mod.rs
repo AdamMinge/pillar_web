@@ -1,30 +1,26 @@
 pub mod index;
 pub mod user;
 
-use crate::components;
-use patternfly_yew::prelude::*;
+mod about;
+mod account;
+mod navigation;
+mod page;
+mod toolbar;
+
+pub use about::AppAbout;
+pub use account::AppAccount;
+pub use index::IndexPage;
+pub use navigation::AppNavigation;
+pub use page::AppPage;
+pub use toolbar::AppToolbar;
+
+use super::route::{switch_app_route, AppRoute};
 
 use dotenv_codegen::dotenv;
+use patternfly_yew::prelude::*;
 use url::Url;
 use yew::prelude::*;
 use yew_nested_router::prelude::{Switch as RouterSwitch, *};
-use yew_nested_router::Target;
-
-#[derive(Debug, Default, Clone, PartialEq, Eq, Target)]
-pub enum UserRoute {
-    #[default]
-    Login,
-    Signup,
-    #[target(rename = "recovery")]
-    PasswordRecovery,
-}
-
-#[derive(Debug, Default, Clone, PartialEq, Eq, Target)]
-pub enum AppRoute {
-    #[default]
-    Index,
-    User(UserRoute),
-}
 
 #[function_component(App)]
 pub fn app() -> Html {
@@ -43,39 +39,5 @@ pub fn app() -> Html {
                 </ToastViewer>
             </BackdropViewer>
         </flow_api::components::Api>
-    }
-}
-
-fn switch_app_route(target: AppRoute) -> Html {
-    let user = |target: UserRoute| match target {
-        UserRoute::Login => {
-            html! {
-            <user::LoginPage<UserRoute>
-                signup={UserRoute::Signup}
-                recovery={UserRoute::PasswordRecovery}
-            />}
-        }
-        UserRoute::Signup => html! {
-            <user::SignupPage<UserRoute>
-                login={UserRoute::Login}
-            />
-        },
-        UserRoute::PasswordRecovery => html! {<user::PasswordRecoveryPage/>},
-    };
-
-    match target {
-        AppRoute::Index => html! {
-            <components::AppPage>
-                <index::IndexPage/>
-            </components::AppPage>
-        },
-
-        AppRoute::User(_) => {
-            html!(
-                <Scope<AppRoute, UserRoute> mapper={AppRoute::mapper_user}>
-                    <RouterSwitch<UserRoute> render={user}/>
-                </Scope<AppRoute, UserRoute>>
-            )
-        }
     }
 }

@@ -1,11 +1,11 @@
+use crate::hooks::use_router;
+use crate::route::{AppRoute, UserRoute};
+
 use patternfly_yew::prelude::*;
 use yew::prelude::*;
 
-use crate::app::{AppRoute, UserRoute};
-use crate::hooks::use_router;
-
-#[function_component(UserDropdown)]
-pub fn user_dropdown() -> Html {
+#[function_component(AppAccount)]
+pub fn app_account() -> Html {
     let login_callback = use_router(AppRoute::User(UserRoute::Login));
     let register_callback = use_router(AppRoute::User(UserRoute::Signup));
 

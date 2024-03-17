@@ -1,4 +1,5 @@
 use crate::api::Client;
+
 use std::ops::{Deref, DerefMut};
 use std::sync::atomic::{AtomicUsize, Ordering};
 

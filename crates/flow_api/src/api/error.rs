@@ -1,4 +1,5 @@
 use crate::types::ErrorResponse;
+
 use thiserror::Error as ThisError;
 
 #[derive(ThisError, Clone, Debug, PartialEq, Eq)]
