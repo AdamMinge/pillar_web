@@ -1,3 +1,5 @@
+use crate::hooks::use_router;
+use crate::routes::AppRoute;
 use crate::validators::make_email_validator;
 
 use patternfly_yew::prelude::*;
@@ -31,6 +33,19 @@ fn password_recovery_page_form() -> Html {
         })
     };
 
+    let valid_email = use_state(move || false);
+    let on_email_validated = {
+        let valid_email = valid_email.clone();
+        Callback::from(move |result: ValidationResult| {
+            valid_email.set(result.state == InputState::Success);
+        })
+    };
+
+    let recovery_enabled = {
+        let valid_email = valid_email.clone();
+        move || *valid_email
+    };
+
     let password_recovery = {
         let client = flow_api::hooks::use_client();
         let email = email.clone();
@@ -50,22 +65,20 @@ fn password_recovery_page_form() -> Html {
         let password_recovery = password_recovery.clone();
 
         Callback::from(move |_| {
-            password_recovery.run();
+            if !password_recovery.loading {
+                password_recovery.run();
+            }
         })
     };
 
-    let valid_email = use_state(move || false);
-    let on_email_validated = {
-        let valid_email = valid_email.clone();
-        Callback::from(move |result: ValidationResult| {
-            valid_email.set(result.state == InputState::Success);
-        })
-    };
-
-    let recovery_enabled = {
-        let valid_email = valid_email.clone();
-        move || *valid_email
-    };
+    let submit_success_callback = use_router(AppRoute::Index);
+    use_effect_with(password_recovery.clone(), move |password_recovery| {
+        if let Some(_) = &password_recovery.data {
+            submit_success_callback.emit(());
+        } else if let Some(_) = &password_recovery.error {
+        }
+        || ()
+    });
 
     html! {
         <>
@@ -79,7 +92,14 @@ fn password_recovery_page_form() -> Html {
                     <TextInput required=true onchange={onchangeemail} value={(*email).clone()} />
                 </FormGroupValidated<TextInput>>
                 <ActionGroup>
-                    <Button label="Recovery" block=true r#type={ButtonType::Submit} variant={ButtonVariant::Primary} disabled={!recovery_enabled()}/>
+                    <Button
+                        label="Recovery"
+                        block=true
+                        r#type={ButtonType::Submit}
+                        variant={ButtonVariant::Primary}
+                        disabled={!recovery_enabled()}
+                        loading={password_recovery.loading}
+                    />
                 </ActionGroup>
             </Form>
         </>

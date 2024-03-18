@@ -1,4 +1,5 @@
-use crate::routes::UserRoute;
+use crate::hooks::use_router;
+use crate::routes::{AppRoute, UserRoute};
 use crate::validators::{make_email_validator, make_password_validator};
 
 use patternfly_yew::prelude::*;
@@ -45,22 +46,6 @@ fn login_page_form() -> Html {
         })
     };
 
-    let user_login = {
-        let client = flow_api::hooks::use_client();
-        let email = email.clone();
-        let password = password.clone();
-
-        use_async(async move { client.unwrap().login(&email, &password).await })
-    };
-
-    let onsubmit = {
-        let user_login = user_login.clone();
-
-        Callback::from(move |_| {
-            user_login.run();
-        })
-    };
-
     let valid_email = use_state(move || false);
     let on_email_validated = {
         let valid_email = valid_email.clone();
@@ -83,6 +68,32 @@ fn login_page_form() -> Html {
         move || *valid_email && *valid_password
     };
 
+    let user_login = {
+        let client = flow_api::hooks::use_client();
+        let email = email.clone();
+        let password = password.clone();
+
+        use_async(async move { client.unwrap().login(&email, &password).await })
+    };
+
+    let onsubmit = {
+        let user_login = user_login.clone();
+        Callback::from(move |_| {
+            if !user_login.loading {
+                user_login.run();
+            }
+        })
+    };
+
+    let submit_success_callback = use_router(AppRoute::Index);
+    use_effect_with(user_login.clone(), move |user_login| {
+        if let Some(_) = &user_login.data {
+            submit_success_callback.emit(());
+        } else if let Some(_) = &user_login.error {
+        }
+        || ()
+    });
+
     html! {
         <>
             <Form {onsubmit} method="dialog">
@@ -101,11 +112,23 @@ fn login_page_form() -> Html {
                     validator={make_password_validator()}
                     onvalidated={on_password_validated}
                 >
-                    <TextInput required=true r#type={TextInputType::Password} onchange={onchangepassword} value={(*password).clone()} />
+                    <TextInput
+                        required=true
+                        r#type={TextInputType::Password}
+                        onchange={onchangepassword}
+                        value={(*password).clone()}
+                    />
                 </FormGroupValidated<TextInput>>
 
                 <ActionGroup>
-                    <Button label="Log In" block=true r#type={ButtonType::Submit} variant={ButtonVariant::Primary} disabled={!login_enabled()}/>
+                    <Button
+                        label="Log In"
+                        block=true
+                        r#type={ButtonType::Submit}
+                        variant={ButtonVariant::Primary}
+                        disabled={!login_enabled()}
+                        loading={user_login.loading}
+                    />
                 </ActionGroup>
             </Form>
         </>

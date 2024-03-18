@@ -1,4 +1,5 @@
-use crate::routes::UserRoute;
+use crate::hooks::use_router;
+use crate::routes::{AppRoute, UserRoute};
 use crate::validators::{make_email_validator, make_password_validator, make_username_validator};
 
 use patternfly_yew::prelude::*;
@@ -52,33 +53,6 @@ fn signup_page_form() -> Html {
         })
     };
 
-    let user_signup = {
-        let client = flow_api::hooks::use_client();
-        let username = username.clone();
-        let email: UseStateHandle<String> = email.clone();
-        let password = password.clone();
-
-        use_async(async move {
-            flow_api::services::signup(
-                &mut client.unwrap(),
-                flow_api::types::Signup {
-                    username: (*username).clone(),
-                    password: (*password).clone(),
-                    email: (*email).clone(),
-                },
-            )
-            .await
-        })
-    };
-
-    let onsubmit = {
-        let user_signup = user_signup.clone();
-
-        Callback::from(move |_| {
-            user_signup.run();
-        })
-    };
-
     let valid_email = use_state(move || false);
     let on_email_validated = {
         let valid_email = valid_email.clone();
@@ -110,6 +84,44 @@ fn signup_page_form() -> Html {
         move || *valid_email && *valid_username && *valid_password
     };
 
+    let user_signup = {
+        let client = flow_api::hooks::use_client();
+        let username = username.clone();
+        let email: UseStateHandle<String> = email.clone();
+        let password = password.clone();
+
+        use_async(async move {
+            flow_api::services::signup(
+                &mut client.unwrap(),
+                flow_api::types::Signup {
+                    username: (*username).clone(),
+                    password: (*password).clone(),
+                    email: (*email).clone(),
+                },
+            )
+            .await
+        })
+    };
+
+    let onsubmit = {
+        let user_signup = user_signup.clone();
+
+        Callback::from(move |_| {
+            if !user_signup.loading {
+                user_signup.run();
+            }
+        })
+    };
+
+    let submit_success_callback = use_router(AppRoute::Index);
+    use_effect_with(user_signup.clone(), move |user_signup| {
+        if let Some(_) = &user_signup.data {
+            submit_success_callback.emit(());
+        } else if let Some(_) = &user_signup.error {
+        }
+        || ()
+    });
+
     html! {
         <>
             <Form {onsubmit} method="dialog">
@@ -138,7 +150,14 @@ fn signup_page_form() -> Html {
                     <TextInput required=true r#type={TextInputType::Password} onchange={onchangepassword} value={(*password).clone()} />
                 </FormGroupValidated<TextInput>>
                 <ActionGroup>
-                    <Button label="Sign up" block=true r#type={ButtonType::Submit} variant={ButtonVariant::Primary} disabled={!signup_enabled()}/>
+                    <Button
+                        label="Sign up"
+                        block=true
+                        r#type={ButtonType::Submit}
+                        variant={ButtonVariant::Primary}
+                        disabled={!signup_enabled()}
+                        loading={user_signup.loading}
+                    />
                 </ActionGroup>
             </Form>
         </>

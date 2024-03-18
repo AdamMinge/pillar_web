@@ -14,12 +14,12 @@ pub enum UserRoute {
 
 pub fn switch_user_route(target: UserRoute) -> Html {
     match target {
-        UserRoute::Login => {
-            html! {
-            <LoginPage/>}
-        }
+        UserRoute::Login => html! {
+            <LoginPage/>
+        },
         UserRoute::Signup => html! {
             <SignupPage/>
+
         },
         UserRoute::PasswordRecovery => html! {<PasswordRecoveryPage/>},
     }
