@@ -49,6 +49,7 @@ fn login_page_form() -> Html {
         let client = flow_api::hooks::use_client();
         let email = email.clone();
         let password = password.clone();
+
         use_async(async move { client.unwrap().login(&email, &password).await })
     };
 

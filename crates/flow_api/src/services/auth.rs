@@ -17,3 +17,10 @@ pub async fn resend_activation(
 ) -> Result<(), api::Error> {
     client.post("auth/activation/resend/", email).await
 }
+
+pub async fn password_recovery(
+    client: &mut api::Client,
+    email: types::Email,
+) -> Result<(), api::Error> {
+    client.post("auth/password_recovery/", email).await
+}
