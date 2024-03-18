@@ -42,7 +42,7 @@ pub fn password_recovery_page() -> Html {
                         />
                         <LoginMainBody>
                             <Form {onsubmit} method="dialog">
-                                <FormGroup label="Email">
+                                <FormGroup label="Email" required=true>
                                     <TextInput required=true name="email" onchange={onchangeemail} value={(*email).clone()} />
                                 </FormGroup>
 

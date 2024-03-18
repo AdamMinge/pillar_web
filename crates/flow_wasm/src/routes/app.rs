@@ -1,7 +1,4 @@
-mod user;
-
-pub use user::{switch_user_route, UserRoute};
-
+use super::user::{switch_user_route, UserRoute};
 use crate::app::{index::IndexPage, AppPage};
 
 use yew::prelude::*;
@@ -12,7 +9,7 @@ use yew_nested_router::Target;
 pub enum AppRoute {
     #[default]
     Index,
-    User(user::UserRoute),
+    User(UserRoute),
 }
 
 pub fn switch_app_route(target: AppRoute) -> Html {
@@ -25,9 +22,9 @@ pub fn switch_app_route(target: AppRoute) -> Html {
 
         AppRoute::User(_) => {
             html!(
-                <Scope<AppRoute, user::UserRoute> mapper={AppRoute::mapper_user}>
-                    <RouterSwitch<user::UserRoute> render={user::switch_user_route}/>
-                </Scope<AppRoute, user::UserRoute>>
+                <Scope<AppRoute, UserRoute> mapper={AppRoute::mapper_user}>
+                    <RouterSwitch<UserRoute> render={switch_user_route}/>
+                </Scope<AppRoute, UserRoute>>
             )
         }
     }

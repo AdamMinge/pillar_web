@@ -17,3 +17,4 @@ yew = { version = "0.21.0", features = ["csr"] }
 yew-hooks = "0.3.0"
 thiserror = "1.0.0"
 uuid = "1.7.0"
+log = "0.4.21"

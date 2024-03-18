@@ -1,20 +1,16 @@
+use crate::routes::UserRoute;
+
 use patternfly_yew::prelude::*;
 use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 use yew_nested_router::components::*;
-use yew_nested_router::prelude::*;
-
-#[derive(Clone, PartialEq, Properties)]
-pub struct SignupPageProps<T: Target> {
-    pub login: T,
-}
 
 #[function_component(SignupPage)]
-pub fn signup_page<T: Target>(props: &SignupPageProps<T>) -> Html {
+pub fn signup_page() -> Html {
     let links = ChildrenRenderer::new(vec![]);
 
     let band = ChildrenRenderer::new(vec![
-        html! {<>{"Already have an account? "}<Link<T> active="active" target={props.login.clone()}>{ "Log in" }</Link<T>></>},
+        html! {<>{"Already have an account? "}<Link<UserRoute> active="active" target={UserRoute::Login}>{ "Log in" }</Link<UserRoute>></>},
     ]);
 
     let title = html_nested! {<Title size={Size::XXLarge}>{"Create your account"}</Title>};
@@ -72,13 +68,13 @@ pub fn signup_page<T: Target>(props: &SignupPageProps<T>) -> Html {
                         />
                         <LoginMainBody>
                             <Form {onsubmit} method="dialog">
-                                <FormGroup label="Username">
+                                <FormGroup label="Username" required=true>
                                     <TextInput required=true name="username" onchange={onchangeusername} value={(*username).clone()} />
                                 </FormGroup>
-                                <FormGroup label="Email">
+                                <FormGroup label="Email" required=true>
                                     <TextInput required=true name="email" onchange={onchangeemail} value={(*email).clone()} />
                                 </FormGroup>
-                                <FormGroup label="Password">
+                                <FormGroup label="Password" required=true>
                                     <TextInput required=true name="password" r#type={TextInputType::Password} onchange={onchangepassword} value={(*password).clone()} />
                                 </FormGroup>
                                 <ActionGroup>

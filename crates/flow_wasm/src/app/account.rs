@@ -1,5 +1,5 @@
 use crate::hooks::use_router;
-use crate::route::{AppRoute, UserRoute};
+use crate::routes::{AppRoute, UserRoute};
 
 use flow_api::components::{Authenticated, NotAuthenticated};
 use patternfly_yew::prelude::*;

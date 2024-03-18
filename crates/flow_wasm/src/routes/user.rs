@@ -16,15 +16,10 @@ pub fn switch_user_route(target: UserRoute) -> Html {
     match target {
         UserRoute::Login => {
             html! {
-            <LoginPage<UserRoute>
-                signup={UserRoute::Signup}
-                recovery={UserRoute::PasswordRecovery}
-            />}
+            <LoginPage/>}
         }
         UserRoute::Signup => html! {
-            <SignupPage<UserRoute>
-                login={UserRoute::Login}
-            />
+            <SignupPage/>
         },
         UserRoute::PasswordRecovery => html! {<PasswordRecoveryPage/>},
     }
