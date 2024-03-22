@@ -29,7 +29,6 @@ yew = { version = "0.21.0", features = ["csr"] }
 yew-router = "0.18.0"
 yew-hooks = "0.3.0"
 yew-more-hooks = { version = "0.3.0", features = ["yew-hooks"] }
-yew-nested-router = "0.4.0"
 wasm-bindgen-futures = "0.4.41"
 wasm-bindgen = "0.2.0"
 wasm-logger = "0.2.0"

@@ -4,7 +4,7 @@ use dotenv_codegen::dotenv;
 use patternfly_yew::prelude::*;
 use url::Url;
 use yew::prelude::*;
-use yew_nested_router::prelude::{Switch as RouterSwitch, *};
+use yew_router::prelude::{Switch as RouterSwitch, *};
 
 #[function_component(App)]
 pub fn app() -> Html {
@@ -17,9 +17,9 @@ pub fn app() -> Html {
         <flow_api::components::Api config={config}>
             <BackdropViewer>
                 <ToastViewer>
-                    <Router<AppRoute> default={AppRoute::Index}>
+                    <BrowserRouter>
                         <RouterSwitch<AppRoute> render={switch_app_route} />
-                    </Router<AppRoute>>
+                    </BrowserRouter>
                 </ToastViewer>
             </BackdropViewer>
         </flow_api::components::Api>

@@ -1,14 +1,23 @@
-use crate::hooks::use_router;
-use crate::routes::{AppRoute, UserRoute};
+use crate::routes::AuthRoute;
 
 use flow_api::components::{Authenticated, NotAuthenticated};
 use patternfly_yew::prelude::*;
 use yew::prelude::*;
+use yew_router::prelude::*;
 
 #[function_component(AppAccount)]
 pub fn app_account() -> Html {
-    let login_callback = use_router(AppRoute::User(UserRoute::Login));
-    let register_callback = use_router(AppRoute::User(UserRoute::Signup));
+    let navigator = use_navigator().unwrap();
+
+    let login_callback = {
+        let navigator = navigator.clone();
+        Callback::from(move |_| navigator.push(&AuthRoute::Login))
+    };
+
+    let register_callback = {
+        let navigator = navigator.clone();
+        Callback::from(move |_| navigator.push(&AuthRoute::Signup))
+    };
 
     html! {
         <>

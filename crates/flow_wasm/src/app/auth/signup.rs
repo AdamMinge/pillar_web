@@ -1,19 +1,18 @@
-use crate::hooks::use_router;
-use crate::routes::{AppRoute, UserRoute};
+use crate::routes::{AppRoute, AuthRoute};
 use crate::validators::{make_email_validator, make_password_validator, make_username_validator};
 
 use patternfly_yew::prelude::*;
 use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 use yew_hooks::prelude::*;
-use yew_nested_router::components::*;
+use yew_router::prelude::*;
 
 #[function_component(SignupPageFooter)]
 fn signup_page_footer() -> Html {
     let links = ChildrenRenderer::new(vec![]);
 
     let band = ChildrenRenderer::new(vec![
-        html! {<>{"Already have an account? "}<Link<UserRoute> active="active" target={UserRoute::Login}>{ "Log in" }</Link<UserRoute>></>},
+        html! {<>{"Need an account? "}<Link<AuthRoute> to={AuthRoute::Login}>{ "Log in" }</Link<AuthRoute>></>},
     ]);
 
     html! {
@@ -113,10 +112,10 @@ fn signup_page_form() -> Html {
         })
     };
 
-    let submit_success_callback = use_router(AppRoute::Index);
+    let navigator = use_navigator().unwrap();
     use_effect_with(user_signup.clone(), move |user_signup| {
         if let Some(_) = &user_signup.data {
-            submit_success_callback.emit(());
+            navigator.push(&AppRoute::Home);
         } else if let Some(_) = &user_signup.error {
         }
         || ()

@@ -1,4 +1,3 @@
-use crate::hooks::use_router;
 use crate::routes::AppRoute;
 use crate::validators::make_email_validator;
 
@@ -6,6 +5,7 @@ use patternfly_yew::prelude::*;
 use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 use yew_hooks::prelude::*;
+use yew_router::prelude::*;
 
 #[function_component(PasswordRecoveryPageFooter)]
 fn password_recovery_page_footer() -> Html {
@@ -71,10 +71,10 @@ fn password_recovery_page_form() -> Html {
         })
     };
 
-    let submit_success_callback = use_router(AppRoute::Index);
+    let navigator = use_navigator().unwrap();
     use_effect_with(password_recovery.clone(), move |password_recovery| {
         if let Some(_) = &password_recovery.data {
-            submit_success_callback.emit(());
+            navigator.push(&AppRoute::Home);
         } else if let Some(_) = &password_recovery.error {
         }
         || ()

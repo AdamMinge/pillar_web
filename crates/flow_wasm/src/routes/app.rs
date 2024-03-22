@@ -1,30 +1,28 @@
-use super::user::{switch_user_route, UserRoute};
+use super::auth::{switch_auth_route, AuthRoute};
 use crate::app::{index::IndexPage, AppPage};
 
 use yew::prelude::*;
-use yew_nested_router::prelude::{Switch as RouterSwitch, *};
-use yew_nested_router::Target;
+use yew_router::prelude::*;
 
-#[derive(Debug, Default, Clone, PartialEq, Eq, Target)]
+#[derive(Clone, Routable, PartialEq)]
 pub enum AppRoute {
-    #[default]
-    Index,
-    User(UserRoute),
+    #[at("/")]
+    Home,
+    #[at("/auth/*")]
+    Auth,
 }
 
-pub fn switch_app_route(target: AppRoute) -> Html {
-    match target {
-        AppRoute::Index => html! {
+pub fn switch_app_route(routes: AppRoute) -> Html {
+    match routes {
+        AppRoute::Home => html! {
             <AppPage>
                 <IndexPage/>
             </AppPage>
         },
 
-        AppRoute::User(_) => {
+        AppRoute::Auth => {
             html!(
-                <Scope<AppRoute, UserRoute> mapper={AppRoute::mapper_user}>
-                    <RouterSwitch<UserRoute> render={switch_user_route}/>
-                </Scope<AppRoute, UserRoute>>
+                <flow_api::router::NoAuthenticatedSwitch<AppRoute, AuthRoute> render={switch_auth_route} redirect={AppRoute::Home}/>
             )
         }
     }
