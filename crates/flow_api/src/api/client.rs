@@ -173,7 +173,7 @@ impl InnerClient {
             let response = self
                 .request::<types::RefreshToken, types::AccessToken>(
                     reqwest::Method::POST,
-                    "auth/login/refresh",
+                    "auth/refresh",
                     body,
                 )
                 .await;
@@ -275,11 +275,15 @@ impl InnerClient {
 
         if let Ok(data) = response {
             if data.status().is_success() {
-                let data: Result<T, _> = data.json::<T>().await;
-                if let Ok(data) = data {
-                    Ok(data)
+                if std::any::TypeId::of::<T>() == std::any::TypeId::of::<()>() {
+                    Ok(()).map(|_| unsafe { std::mem::zeroed() })
                 } else {
-                    Err(Error::DeserializeError)
+                    let data: Result<T, _> = data.json::<T>().await;
+                    if let Ok(data) = data {
+                        Ok(data)
+                    } else {
+                        Err(Error::DeserializeError)
+                    }
                 }
             } else {
                 match data.status().as_u16() {

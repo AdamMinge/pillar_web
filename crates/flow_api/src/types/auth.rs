@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use url::Url;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -44,4 +45,11 @@ pub struct Token {
 #[serde(rename_all = "camelCase")]
 pub struct Email {
     pub email: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct EmailSender {
+    pub email: String,
+    pub url: Url,
 }

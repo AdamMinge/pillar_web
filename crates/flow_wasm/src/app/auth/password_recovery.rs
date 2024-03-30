@@ -1,7 +1,9 @@
 use crate::routes::AppRoute;
 use crate::validators::make_email_validator;
 
+use dotenv_codegen::dotenv;
 use patternfly_yew::prelude::*;
+use url::Url;
 use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 use yew_hooks::prelude::*;
@@ -49,12 +51,17 @@ fn password_recovery_page_form() -> Html {
     let password_recovery = {
         let client = flow_api::hooks::use_client();
         let email = email.clone();
+        let recovery_url = Url::parse(dotenv!("FRONTEND_ROOT"))
+            .unwrap()
+            .join("auth/recovery/")
+            .unwrap();
 
         use_async(async move {
-            flow_api::services::password_recovery(
+            flow_api::services::send_recovery(
                 &mut client.unwrap(),
-                flow_api::types::Email {
-                    email: (*email).clone(),
+                flow_api::types::EmailSender {
+                    email: ((*email).clone()),
+                    url: recovery_url,
                 },
             )
             .await
@@ -63,7 +70,6 @@ fn password_recovery_page_form() -> Html {
 
     let onsubmit = {
         let password_recovery = password_recovery.clone();
-
         Callback::from(move |_| {
             if !password_recovery.loading {
                 password_recovery.run();

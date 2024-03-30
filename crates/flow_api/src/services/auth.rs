@@ -7,20 +7,36 @@ pub async fn signup(
     client.post("auth/signup/", signup).await
 }
 
-pub async fn activation(client: &mut api::Client, token: types::Token) -> Result<(), api::Error> {
-    client.post("auth/activation/", token).await
+pub async fn send_activation(
+    client: &mut api::Client,
+    sender: types::EmailSender,
+) -> Result<(), api::Error> {
+    client.post("auth/send_activation/", sender).await
 }
 
-pub async fn resend_activation(
+pub async fn activation(
     client: &mut api::Client,
     email: types::Email,
+    token: types::Token,
 ) -> Result<(), api::Error> {
-    client.post("auth/activation/resend/", email).await
+    client
+        .post(&format!("auth/activation/{}/", token.token), email)
+        .await
 }
 
-pub async fn password_recovery(
+pub async fn send_recovery(
+    client: &mut api::Client,
+    sender: types::EmailSender,
+) -> Result<(), api::Error> {
+    client.post("auth/send_recovery/", sender).await
+}
+
+pub async fn recovery(
     client: &mut api::Client,
     email: types::Email,
+    token: types::Token,
 ) -> Result<(), api::Error> {
-    client.post("auth/password_recovery/", email).await
+    client
+        .post(&format!("auth/recovery/{}/", token.token), email)
+        .await
 }

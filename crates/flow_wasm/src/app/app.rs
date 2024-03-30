@@ -9,8 +9,8 @@ use yew_router::prelude::{Switch as RouterSwitch, *};
 #[function_component(App)]
 pub fn app() -> Html {
     let config = flow_api::api::Config {
-        api_root: Url::parse(dotenv!("API_ROOT")).unwrap(),
-        api_token: Some(dotenv!("API_KEY").to_string()),
+        api_root: Url::parse(dotenv!("BACKEND_ROOT")).unwrap(),
+        api_token: Some(dotenv!("BACKEND_KEY").to_string()),
     };
 
     html! {

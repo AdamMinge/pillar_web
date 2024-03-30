@@ -87,7 +87,7 @@ fn login_page_form() -> Html {
     let navigator = use_navigator().unwrap();
     use_effect_with(user_login.clone(), move |user_login| {
         if let Some(_) = &user_login.data {
-            navigator.push(&AppRoute::Home);
+            navigator.push(&AppRoute::Home)
         } else if let Some(_) = &user_login.error {
         }
         || ()
