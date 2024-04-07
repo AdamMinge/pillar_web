@@ -13,7 +13,7 @@ fn login_page_footer() -> Html {
 
     let band = ChildrenRenderer::new(vec![
         html! {<>{"Need an account? "}<Link<AuthRoute> to={AuthRoute::Signup}>{ "Sign up" }</Link<AuthRoute>></>},
-        html! {<Link<AuthRoute> to={AuthRoute::PasswordRecovery}>{ "Forgot password?" }</Link<AuthRoute>>},
+        html! {<Link<AuthRoute> to={AuthRoute::ForgotRecovery}>{ "Forgot password?" }</Link<AuthRoute>>},
     ]);
 
     html! {

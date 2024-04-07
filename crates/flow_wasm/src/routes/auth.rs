@@ -1,4 +1,6 @@
-use crate::app::{auth::LoginPage, auth::PasswordRecoveryPage, auth::SignupPage};
+use crate::app::{
+    auth::ForgotPasswordPage, auth::LoginPage, auth::PasswordRecoveryPage, auth::SignupPage,
+};
 
 use yew::prelude::*;
 use yew_router::prelude::*;
@@ -10,7 +12,9 @@ pub enum AuthRoute {
     #[at("/auth/signup")]
     Signup,
     #[at("/auth/recovery")]
-    PasswordRecovery,
+    ForgotRecovery,
+    #[at("/auth/recovery/:token")]
+    PasswordRecovery { token: String },
 }
 
 pub fn switch_auth_route(routes: AuthRoute) -> Html {
@@ -22,6 +26,7 @@ pub fn switch_auth_route(routes: AuthRoute) -> Html {
             <SignupPage/>
 
         },
-        AuthRoute::PasswordRecovery => html! {<PasswordRecoveryPage/>},
+        AuthRoute::ForgotRecovery => html! {<ForgotPasswordPage/>},
+        AuthRoute::PasswordRecovery { .. } => html! {<PasswordRecoveryPage/>},
     }
 }

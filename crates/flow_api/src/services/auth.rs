@@ -33,10 +33,10 @@ pub async fn send_recovery(
 
 pub async fn recovery(
     client: &mut api::Client,
-    email: types::Email,
+    password: types::Password,
     token: types::Token,
 ) -> Result<(), api::Error> {
     client
-        .post(&format!("auth/recovery/{}/", token.token), email)
+        .post(&format!("auth/recovery/{}/", token.token), password)
         .await
 }
