@@ -1,20 +1,20 @@
 {
   "package": {
-    "productName": "Flow",
+    "productName": "Pillar",
     "version": "0.1.0"
   },
   "build": {
-    "distDir": "../flow_wasm/dist",
+    "distDir": "../pillar_wasm/dist",
     "devPath": "http://localhost:8000",
-    "beforeDevCommand": "cd flow_wasm && trunk serve",
-    "beforeBuildCommand": "cd flow_wasm && trunk build",
+    "beforeDevCommand": "cd pillar_wasm && trunk serve",
+    "beforeBuildCommand": "cd pillar_wasm && trunk build",
     "withGlobalTauri": true
   },
   "tauri": {
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.flow",
+      "identifier": "com.tauri.pillar",
       "icon": [
         "icons/32x32.png",
         "icons/64x64.png",
@@ -52,7 +52,7 @@
     },
     "windows": [
       {
-        "title": "Flow App",
+        "title": "Pillar App",
         "width": 800,
         "height": 600,
         "resizable": true,

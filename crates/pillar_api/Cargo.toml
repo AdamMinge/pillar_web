@@ -2,7 +2,7 @@
 authors = ["Adam Minge <minge.adam@gmail.com>"]
 edition = "2021"
 license = "Apache-2.0/MIT"
-name = "flow-api"
+name = "pillar-api"
 version = "0.1.0"
 
 [dependencies]

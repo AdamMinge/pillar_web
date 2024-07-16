@@ -1,7 +1,7 @@
 [package]
 authors = ["Adam Minge <minge.adam@gmail.com>"]
 edition = "2021"
-name = "flow-tauri"
+name = "pillar-tauri"
 version = "0.1.0"
 
 [build-dependencies]

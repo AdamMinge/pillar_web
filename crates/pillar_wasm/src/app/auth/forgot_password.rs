@@ -49,7 +49,7 @@ fn forgot_password_page_form() -> Html {
     };
 
     let password_recovery = {
-        let client = flow_api::hooks::use_client();
+        let client = pillar_api::hooks::use_client();
         let email = email.clone();
         let recovery_url = Url::parse(dotenv!("FRONTEND_ROOT"))
             .unwrap()
@@ -57,9 +57,9 @@ fn forgot_password_page_form() -> Html {
             .unwrap();
 
         use_async(async move {
-            flow_api::services::send_recovery(
+            pillar_api::services::send_recovery(
                 &mut client.unwrap(),
-                flow_api::types::EmailSender {
+                pillar_api::types::EmailSender {
                     email: ((*email).clone()),
                     url: recovery_url,
                 },

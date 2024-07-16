@@ -8,13 +8,13 @@ use yew_router::prelude::{Switch as RouterSwitch, *};
 
 #[function_component(App)]
 pub fn app() -> Html {
-    let config = flow_api::api::Config {
+    let config = pillar_api::api::Config {
         api_root: Url::parse(dotenv!("BACKEND_ROOT")).unwrap(),
         api_token: Some(dotenv!("BACKEND_KEY").to_string()),
     };
 
     html! {
-        <flow_api::components::Api config={config}>
+        <pillar_api::components::Api config={config}>
             <BackdropViewer>
                 <ToastViewer>
                     <BrowserRouter>
@@ -22,6 +22,6 @@ pub fn app() -> Html {
                     </BrowserRouter>
                 </ToastViewer>
             </BackdropViewer>
-        </flow_api::components::Api>
+        </pillar_api::components::Api>
     }
 }

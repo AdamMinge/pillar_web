@@ -5,7 +5,7 @@ use gloo_storage::{SessionStorage, Storage};
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
-pub(crate) const STORAGE_KEY_AUTH: &str = "flow/auth";
+pub(crate) const STORAGE_KEY_AUTH: &str = "pillar/auth";
 
 pub(crate) fn get_from_store<T, K>(key: K) -> Result<Option<T>, Error>
 where

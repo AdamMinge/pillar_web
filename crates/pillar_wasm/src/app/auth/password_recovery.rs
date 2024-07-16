@@ -47,7 +47,7 @@ fn password_recovery_page_form() -> Html {
     };
 
     let password_recovery = {
-        let client = flow_api::hooks::use_client();
+        let client = pillar_api::hooks::use_client();
         let password = password.clone();
         let token = use_route::<AuthRoute>().and_then(|route| match route {
             AuthRoute::PasswordRecovery { token } => Some(token),
@@ -55,12 +55,12 @@ fn password_recovery_page_form() -> Html {
         });
 
         use_async(async move {
-            flow_api::services::recovery(
+            pillar_api::services::recovery(
                 &mut client.unwrap(),
-                flow_api::types::Password {
+                pillar_api::types::Password {
                     password: ((*password).clone()),
                 },
-                flow_api::types::Token {
+                pillar_api::types::Token {
                     token: token.unwrap(),
                 },
             )

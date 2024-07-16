@@ -22,7 +22,7 @@ pub fn switch_app_route(routes: AppRoute) -> Html {
 
         AppRoute::Auth => {
             html!(
-                <flow_api::router::NoAuthenticatedSwitch<AppRoute, AuthRoute> render={switch_auth_route} redirect={AppRoute::Home}/>
+                <pillar_api::router::NoAuthenticatedSwitch<AppRoute, AuthRoute> render={switch_auth_route} redirect={AppRoute::Home}/>
             )
         }
     }

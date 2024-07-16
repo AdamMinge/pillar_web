@@ -1,6 +1,6 @@
 use crate::routes::AuthRoute;
 
-use flow_api::components::{Authenticated, NotAuthenticated};
+use pillar_api::components::{Authenticated, NotAuthenticated};
 use patternfly_yew::prelude::*;
 use yew::prelude::*;
 use yew_router::prelude::*;

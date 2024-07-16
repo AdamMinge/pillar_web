@@ -12,7 +12,7 @@ pub struct AppPageProps {
 pub fn app_page(props: &AppPageProps) -> Html {
     let brand = html! {
         <MastheadBrand>
-            <Brand src="/public/images/brand.png" alt="Flow brand" />
+            <Brand src="/public/images/brand.png" alt="Pillar brand" />
         </MastheadBrand>
     };
     let sidebar = html_nested! {

@@ -1,15 +1,15 @@
 [package]
 authors = ["Adam Minge <minge.adam@gmail.com>"]
 description = """
-Web application for distribution of Flow application.
+Web application for distribution of Pillar application.
 """
 edition = "2021"
 license = "Apache-2.0/MIT"
-name = "flow-wasm"
+name = "pillar-wasm"
 version = "0.1.0"
 
 [dependencies]
-flow-api = { path = "../flow_api" }
+pillar-api = { path = "../pillar_api" }
 
 dotenv_codegen = "0.15.0"
 gloo = "0.10.0"

@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/flow_api", "crates/flow_wasm", "crates/flow_tauri"]
+members = ["crates/pillar_api", "crates/pillar_wasm", "crates/pillar_tauri"]
 resolver = "2"
 
 [profile.release]

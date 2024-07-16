@@ -12,9 +12,9 @@ pub fn app_about() -> Html {
                         <AboutModal
                             background_image_src="/public/images/background.png"
                             brand_image_src="/public/images/logo.png"
-                            brand_image_alt="Flow logo"
-                            product_name="Flow"
-                            trademark="Copyright © 2023 Flow"
+                            brand_image_alt="Pillar logo"
+                            product_name="Pillar"
+                            trademark="Copyright © 2023 Pillar"
                         >
             
                         <p>{ env!("CARGO_PKG_DESCRIPTION") }</p>
